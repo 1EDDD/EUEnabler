@@ -97,7 +97,6 @@ static int64_t EUWQQueryToken(NSString *group, BOOL alternateFlags) {
             handle = -5;
         } else {
             setGroups(query, identifier);
-            xpc_release(identifier);
             setPart(query, 3);
             setFlags(query, alternateFlags
                 ? UINT64_C(0x0000000800000000)
