@@ -1,0 +1,33 @@
+name: Build EUEnabler IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ios27-wq-ipa
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Build unsigned IPA
+        run: |
+          chmod +x ./build.sh
+          ./build.sh
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: EUEnabler-IPA
+          path: EUEnabler.ipa
+          if-no-files-found: error
+          retention-days: 14
