@@ -34,10 +34,18 @@ BUNDLE_ID=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.pl
   exit 1
 }
 
+PATCH="$ROOT/eligibility.plist"
+[[ -f "$PATCH" ]] || {
+  echo "Missing eligibility.plist patch resource" >&2
+  exit 1
+}
+plutil -lint "$PATCH" >/dev/null
+
 IPA_ROOT="$ROOT/.build/ipa"
 rm -rf "$IPA_ROOT"
 mkdir -p "$IPA_ROOT/Payload"
 ditto "$APP" "$IPA_ROOT/Payload/EUEnabler.app"
+cp "$PATCH" "$IPA_ROOT/Payload/EUEnabler.app/eligibility.plist"
 (
   cd "$IPA_ROOT"
   /usr/bin/zip -qry "$ROOT/EUEnabler.ipa" Payload
